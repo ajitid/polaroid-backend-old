@@ -1,6 +1,6 @@
 from rest_framework import decorators, views, mixins, viewsets, response, generics
 from django.db.models import F
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, Http404
 from . import models, serializers
 
 
@@ -29,6 +29,8 @@ class FollowingListView(generics.ListAPIView):
     def get_queryset(self):
         username = self.kwargs["username"]
         queryset = models.Follower.objects.filter(follower__username=username)
+        if not queryset.exists():
+            raise Http404()
         return queryset.values("user__name", "user__username").annotate(
             name=F("user__name"), username=F("user__username")
         )
