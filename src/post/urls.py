@@ -14,7 +14,7 @@ app_name = "posts"
 urlpatterns = [
     # path("", include(router.urls)),
     path("", views.PostCreateView.as_view()),
-    path("<str:id>", views.PostDetailView.as_view()),
+    path("<str:id>", views.PostDetailView.as_view(), name="post-detail"),
     # path("<str:username>/followers", views.FollowersListView.as_view()),
     # path("<str:username>/following", views.FollowingListView.as_view()),
 ]

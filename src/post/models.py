@@ -3,7 +3,9 @@ import os.path as path
 from django.db import models
 from django.utils.translation import gettext_lazy as _, gettext
 
-from user.models import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 def get_post_media_path(instance, filename):
@@ -18,12 +20,15 @@ class Post(models.Model):
     caption = models.CharField(max_length=180, blank=True, default="")
     posted = models.DateTimeField(_("posted on"), auto_now_add=True)
 
+    class Meta:
+        ordering = ["-posted"]
+
     def __str__(self):
         return gettext(f"{self.user.name} uploaded a post on {self.posted}")
 
 
 class PostLike(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name="likes", on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -31,7 +36,7 @@ class PostLike(models.Model):
 
 
 class PostComment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name="comments", on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     comment = models.CharField(max_length=180)
 

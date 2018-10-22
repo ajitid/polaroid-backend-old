@@ -15,11 +15,9 @@ class FollowersListView(generics.ListAPIView):
 
     def get_queryset(self):
         username = self.kwargs["username"]
-        user = get_object_or_404(models.User, username=username)
-        return (
-            user.followers.all()
-            .values("follower__name", "follower__username")
-            .annotate(name=F("follower__name"), username=F("follower__username"))
+        queryset = models.Follower.objects.filter(user__username=username)
+        return queryset.values("follower__name", "follower__username").annotate(
+            name=F("follower__name"), username=F("follower__username")
         )
 
 
@@ -29,8 +27,6 @@ class FollowingListView(generics.ListAPIView):
     def get_queryset(self):
         username = self.kwargs["username"]
         queryset = models.Follower.objects.filter(follower__username=username)
-        if not queryset.exists():
-            raise Http404()
         return queryset.values("user__name", "user__username").annotate(
             name=F("user__name"), username=F("user__username")
         )
