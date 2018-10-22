@@ -1,0 +1,6 @@
+- [ ] Global pagination
+- [ ] filtering | query param
+- [ ] auth everywhere
+- [ ] custom 404
+- [ ] create profile model
+- [ ] add authorisation classes for blocked and private account
