@@ -22,6 +22,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/users/", include("user.urls")),
     path("api/posts/", include("post.urls")),
+    path("api/auth/", include("auth.urls_drf_auth")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# make a check to do static serving like this only in dev
+# TODO make a check to do static serving like this only in dev

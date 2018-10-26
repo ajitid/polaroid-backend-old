@@ -1,3 +1,4 @@
+import os.path as path
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _, gettext
@@ -21,29 +22,29 @@ class User(AbstractUser):
         pass
 
 
-"""
+DEFAULT_PROFILE_PICTURE_PATH = path.join("profile-photo", "default.svg")
+
+
+def get_profile_photo_path(instance, filename):
+    name, ext = path.splitext(filename)
+    return path.join("profile-photo", f"{instance.user.username}{ext}")
+
+
 class Profile(models.Model):
-    bio, dob, dp, private_account
-"""
+    # user not pk=True because of weird Django AUTH_PROFILE_SOMETHING and SQLite issue
+    user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
+    photo = models.ImageField(upload_to=get_profile_photo_path, default=DEFAULT_PROFILE_PICTURE_PATH)
+    dob = models.DateField(_("date of birth"), blank=True, null=True)
+    bio = models.CharField(max_length=180, blank=True)
+    followers = models.ManyToManyField(User, related_name="followers", symmetrical=False, blank=True)
+    blocked_users = models.ManyToManyField(User, related_name="blocked_users", symmetrical=False, blank=True)
 
-
-class Follower(models.Model):
-    user = models.ForeignKey(User, related_name="followers", on_delete=models.CASCADE)
-    follower = models.ForeignKey(User, related_name="+", on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = (("user", "follower"),)
-
-    def __str__(self):
-        return gettext(f"{self.user} has follower {self.follower}")
-
-
-class BlockedUser(models.Model):
-    user = models.ForeignKey(User, related_name="blocked_users", on_delete=models.CASCADE)
-    blocked_user = models.ForeignKey(User, related_name="+", on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = (("user", "blocked_user"),)
+    @property
+    def following(self):
+        return User.objects.filter(profile__followers__username=self.user.username)
 
     def __str__(self):
-        return gettext(f"{self.user} has blocked user f{self.blocked_user}")
+        return f"{self.user.username}"
+
+
+# FIXME profile.photo

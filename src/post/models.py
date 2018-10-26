@@ -17,28 +17,25 @@ class Post(models.Model):
     id = models.UUIDField(_("post id"), primary_key=True, default=uuid4, editable=False, unique=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     photo = models.ImageField(upload_to=get_post_media_path)
-    caption = models.CharField(max_length=180, blank=True, default="")
-    posted = models.DateTimeField(_("posted on"), auto_now_add=True)
+    caption = models.CharField(max_length=180, blank=True)
+    timestamp = models.DateTimeField(_("posted on"), auto_now_add=True)
+    likes = models.ManyToManyField(User, related_name="likes", blank=True)
 
     class Meta:
-        ordering = ["-posted"]
+        ordering = ["-timestamp"]
 
     def __str__(self):
-        return gettext(f"{self.user.name} uploaded a post on {self.posted}")
+        return gettext(f"{self.user.name} added a post on {self.timestamp}")
 
 
-class PostLike(models.Model):
-    post = models.ForeignKey(Post, related_name="likes", on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return gettext(f"{self.user.name} liked a post of {self.post.user.name}")
-
-
-class PostComment(models.Model):
+class Comment(models.Model):
     post = models.ForeignKey(Post, related_name="comments", on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     comment = models.CharField(max_length=180)
+    timestamp = models.DateTimeField(_("posted on"), auto_now_add=True)
+
+    class Meta:
+        ordering = ["timestamp"]
 
     def __str__(self):
         return gettext(f"{self.user.name} commented on a post of {self.post.user.name}")

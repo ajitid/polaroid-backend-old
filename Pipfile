@@ -12,6 +12,8 @@ s = "python manage.py runserver"
 django = "*"
 djangorestframework = "*"
 pillow = "*"
+django-cors-headers = "*"
+markdown = "*"
 
 [dev-packages]
 bpython = "*"
