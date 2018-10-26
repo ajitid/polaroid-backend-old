@@ -17,12 +17,18 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/users/", include("user.urls")),
     path("api/posts/", include("post.urls")),
     path("api/auth/", include("auth.urls_drf_auth")),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+if settings.DEBUG is True:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += staticfiles_urlpatterns()
 
 # TODO make a check to do static serving like this only in dev
+# DEBUG = True, SECRET_KEY

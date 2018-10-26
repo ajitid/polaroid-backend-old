@@ -7,6 +7,7 @@
 - failsafe - following themself
 - profile edit
 - search and explore
+- bookmark posts - save reference
 - @ tagging and # hashtag
 - block and private, and above
 - cloudfare, cloudinary, psql

@@ -38,6 +38,7 @@ class UserPostListView(generics.ListAPIView):
         return queryset
 
 
+# you cannot delete comments on insta, same here
 class PostCommentView(generics.ListCreateAPIView):
     serializer_class = serializers.CommentSerializer
 
