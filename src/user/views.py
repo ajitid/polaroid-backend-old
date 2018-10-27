@@ -32,6 +32,12 @@ class ProfileView(generics.RetrieveUpdateAPIView):
     lookup_field = "user__username"
     lookup_url_kwarg = "username"
 
+    def check_permissions(self, request):
+        if (request.method in ("PUT", "PATCH")) and (self.kwargs["username"] != request.user.username):
+            # TODO make sure Swagger or other doc generation doesn't skip methods mentioned in above condition
+            raise MethodNotAllowed(request.method)
+        return super().check_permissions(request)
+
 
 class FollowersListView(generics.ListAPIView):
     serializer_class = serializers.UserSerializer
