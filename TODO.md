@@ -1,6 +1,16 @@
-- all about profile and post image
+- simplify things like
+```
+if (request.method in ("PUT", "PATCH")) and (self.kwargs["username"] != request.user.username):
+```
+by using api/users/self
+rather than api/users/ajitid and using the above condition as then they will be simplified to
+just read requests
+^ this is still debatable as this doesn't solves deleting comment or posts plus we are breaking consistency for just one case
+
+
 - https://github.com/MatteoGabriele/vue-progressive-image
-- reset pwd flow
+- all about profile and post image
+- reset pwd flow and activate account email
 - iframe share
 - failsafe - following themself
 - profile edit
