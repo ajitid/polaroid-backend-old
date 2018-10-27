@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="/static-dev/brand/logo.svg" alt="Polaroid" />
+  <img src="/static-dev/brand/logo.svg" alt="Polaroid" width="500px" />
 </h1>
 
 
