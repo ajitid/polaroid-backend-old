@@ -27,9 +27,10 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class PostWithPhotoReadOnlySerializer(PostSerializer):
+    photo = serializers.ImageField(read_only=True)
+
     class Meta(PostSerializer.Meta):
         extra_kwargs = PostSerializer.Meta.extra_kwargs
-        extra_kwargs["photo"] = {"read_only": True}
 
 
 class PostWithUrlSerializer(PostSerializer):

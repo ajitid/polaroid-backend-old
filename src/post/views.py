@@ -8,7 +8,7 @@ from rest_framework.generics import get_object_or_404
 
 from . import models, serializers
 
-# FIXME not accepting photo as well as allowing null
+
 class PostCreateView(generics.CreateAPIView):
     serializer_class = serializers.PostWithUrlSerializer
     queryset = models.Post.objects.all()
@@ -17,7 +17,7 @@ class PostCreateView(generics.CreateAPIView):
 
 class PostView(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Post.objects.all()
-    serializer_class = serializers.PostSerializer
+    serializer_class = serializers.PostWithPhotoReadOnlySerializer
     lookup_field = "id"
 
     def get_serializer_class(self):
