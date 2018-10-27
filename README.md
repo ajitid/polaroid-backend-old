@@ -1,4 +1,6 @@
-![Polaroid](./static-dev/brand/logo.svg)
+<h1 align="center">
+  <img src="/static-dev/brand/logo.svg" alt="Polaroid" />
+</h1>
 
 
 _Working on it..._
