@@ -9,6 +9,7 @@ from . import models, views
 class PostSerializer(serializers.HyperlinkedModelSerializer):
     username = serializers.ReadOnlyField(source="user.username")
     name = serializers.ReadOnlyField(source="user.name")
+    photo = serializers.ImageField()
     likes = serializers.ReadOnlyField(source="likes.count")
 
     class Meta:
@@ -25,9 +26,15 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         return post
 
 
+class PostWithPhotoReadOnlySerializer(PostSerializer):
+    class Meta(PostSerializer.Meta):
+        extra_kwargs = PostSerializer.Meta.extra_kwargs
+        extra_kwargs["photo"] = {"read_only": True}
+
+
 class PostWithUrlSerializer(PostSerializer):
     class Meta(PostSerializer.Meta):
-        fields = ("url", "username", "name", "photo", "caption", "timestamp", "likes")
+        fields = ("url",) + PostSerializer.Meta.fields
 
 
 class PostPhotoOnlySerializer(serializers.ModelSerializer):
@@ -46,12 +53,15 @@ class PostPhotoOnlySerializer(serializers.ModelSerializer):
 #     article = self.validated_data['article']
 
 
-class CommentSerializer(serializers.ModelSerializer):
+# TODO instead of depending on id, use url by making it a HyperlinkModelSerializer
+# hold on ^this coz it'll also make unncessarily long url for no reason
+class PostCommentSerializer(serializers.ModelSerializer):
     username = serializers.ReadOnlyField(source="user.username")
 
     class Meta:
         model = models.Comment
-        fields = ("username", "comment")
+        fields = ("id", "username", "comment", "timestamp")
+        extra_kwargs = {"timestamp": {"read_only": "true"}}
 
     def create(self, validated_data):
         post_id = self.context["post_id"]

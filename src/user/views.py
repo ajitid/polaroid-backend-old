@@ -13,6 +13,7 @@ class UserCreateView(generics.CreateAPIView):
     permission_classes = []
 
 
+# TODO change photo from a different url
 class UserView(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.User.objects.all()
     serializer_class = serializers.UserSerializer

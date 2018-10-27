@@ -1,5 +1,3 @@
-- fix post comment view to add comment and find a way to delete a comment
-- delete comment
 - all about profile and post image
 - https://github.com/MatteoGabriele/vue-progressive-image
 - reset pwd flow
@@ -9,7 +7,7 @@
 - search and explore
 - bookmark posts - save reference
 - @ tagging and # hashtag
-- block and private, and above
+- block and private and failsafe for block
 - cloudfare, cloudinary, psql
 
 
@@ -22,7 +20,7 @@
 
 
 
-
+- [ ] nametag
 - [ ] change default svg profile pic back to insta black
 - [ ] filtering | query param
 - [ ] csrf, DRF loggin in only of user is staff

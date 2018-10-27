@@ -8,20 +8,26 @@ from rest_framework.generics import get_object_or_404
 
 from . import models, serializers
 
-
+# FIXME not accepting photo as well as allowing null
 class PostCreateView(generics.CreateAPIView):
-    serializer_class = serializers.PostSerializer
+    serializer_class = serializers.PostWithUrlSerializer
     queryset = models.Post.objects.all()
     permission_classes = (IsAuthenticated,)
 
 
-class PostDetailDestroyView(generics.RetrieveDestroyAPIView):
+class PostView(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Post.objects.all()
     serializer_class = serializers.PostSerializer
     lookup_field = "id"
 
+    def get_serializer_class(self):
+        serializer_class = self.serializer_class
+        if self.request.method in ("PUT", "PATCH"):
+            serializer_class = serializers.PostWithPhotoReadOnlySerializer
+        return serializer_class
+
     def check_permissions(self, request):
-        if request.method is "DELETE":
+        if request.method in ("PUT", "PATCH", "DELETE"):
             # TODO make sure Swagger or other doc generation doesn't skip methods mentioned in above condition
             post = get_object_or_404(models.Post, id=self.kwargs["id"])
             if post.user != request.user:
@@ -34,24 +40,36 @@ class UserPostListView(generics.ListAPIView):
 
     def get_queryset(self):
         username = self.kwargs["username"]
-        queryset = models.Post.objects.filter(user__username=username)
+        user = get_object_or_404(models.User, username=username)
+        queryset = user.posts.all()
         return queryset
 
 
-# you cannot delete comments on insta, same here
-class PostCommentView(generics.ListCreateAPIView):
-    serializer_class = serializers.CommentSerializer
+class PostCommentViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.PostCommentSerializer
 
     def get_queryset(self):
-        post_id = self.kwargs["id"]
+        post_id = self.kwargs["post_id"]
         post = get_object_or_404(models.Post, id=post_id)
         queryset = post.comments.all()
         return queryset
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context["post_id"] = self.kwargs["id"]
+        context["post_id"] = self.kwargs["post_id"]
+        if self.kwargs.get("pk") is not None:
+            context["id"] = self.kwargs["pk"]
         return context
+
+    def check_permissions(self, request):
+        if request.method in ("PUT", "PATCH", "DELETE"):
+            # TODO make sure Swagger or other doc generation doesn't skip methods mentioned in above condition
+            comment = get_object_or_404(models.Comment, pk=self.kwargs["pk"], post__id=self.kwargs["post_id"])
+            if comment.user != request.user:
+                raise MethodNotAllowed(request.method)
+        return super().check_permissions(request)
+
+    # TODO didn't needed to define `check_permissions` like above, check why
 
 
 class PostLikeView(views.APIView):

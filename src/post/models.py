@@ -15,7 +15,7 @@ def get_post_media_path(instance, filename):
 
 class Post(models.Model):
     id = models.UUIDField(_("post id"), primary_key=True, default=uuid4, editable=False, unique=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name="posts", on_delete=models.CASCADE)
     photo = models.ImageField(upload_to=get_post_media_path)
     caption = models.CharField(max_length=180, blank=True)
     timestamp = models.DateTimeField(_("posted on"), auto_now_add=True)

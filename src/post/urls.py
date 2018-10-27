@@ -5,19 +5,15 @@ from . import views
 
 app_name = "posts"
 
-# router = DefaultRouter()
-# router.register()
-# router.register("<username:str>/followers", views.followers)
+router = DefaultRouter()
+router.register(r"(?P<post_id>.+)/comments", views.PostCommentViewSet, basename="post-comment")
 # router.register("m/<str:username>", views.UserViewSet)
 
-
 urlpatterns = [
-    # path("", include(router.urls)),
     path("", views.PostCreateView.as_view()),
+    path("<uuid:id>", views.PostView.as_view(), name="post-detail"),
     path("feed", views.FeedView.as_view()),
-    path("<str:id>", views.PostDetailDestroyView.as_view(), name="post-detail"),
-    path("<str:id>/comments", views.PostCommentView.as_view(), name="post-comments"),
-    path("<str:id>/likes", views.PostLikeView.as_view(), name="post-like"),
-    # path("<str:username>/followers", views.FollowersListView.as_view()),
-    # path("<str:username>/following", views.FollowingListView.as_view()),
+    # path("<uuid:id>/comments", views.PostCommentView.as_view(), name="post-comment"),
+    path("<uuid:id>/likes", views.PostLikeView.as_view(), name="post-like"),
+    path("", include(router.urls)),
 ]
