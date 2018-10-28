@@ -1,3 +1,7 @@
+- add thumbnail field to django modela and serializers
+- add signals (imagekit has signals too)
+
+
 - simplify things like
 ```
 if (request.method in ("PUT", "PATCH")) and (self.kwargs["username"] != request.user.username):

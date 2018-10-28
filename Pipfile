@@ -14,7 +14,7 @@ djangorestframework = "*"
 pillow = "*"
 django-cors-headers = "*"
 markdown = "*"
-django-versatileimagefield = "*"
+django-imagekit = "*"
 
 [dev-packages]
 bpython = "*"
