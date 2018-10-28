@@ -20,11 +20,11 @@ class PostView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.PostWithPhotoReadOnlySerializer
     lookup_field = "id"
 
-    def get_serializer_class(self):
-        serializer_class = self.serializer_class
-        if self.request.method in ("PUT", "PATCH"):
-            serializer_class = serializers.PostWithPhotoReadOnlySerializer
-        return serializer_class
+    # def get_serializer_class(self):
+    #     serializer_class = self.serializer_class
+    #     if self.request.method in ("PUT", "PATCH"):
+    #         serializer_class = serializers.PostWithPhotoReadOnlySerializer
+    #     return serializer_class
 
     def check_permissions(self, request):
         if request.method in ("PUT", "PATCH", "DELETE"):

@@ -10,11 +10,12 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
     username = serializers.ReadOnlyField(source="user.username")
     name = serializers.ReadOnlyField(source="user.name")
     photo = serializers.ImageField()
+    thumbnail = serializers.ImageField(read_only=True)
     likes = serializers.ReadOnlyField(source="likes.count")
 
     class Meta:
         model = models.Post
-        fields = ("username", "name", "photo", "caption", "timestamp", "likes")
+        fields = ("username", "name", "photo", "thumbnail", "caption", "timestamp", "likes")
         extra_kwargs = {
             "timestamp": {"read_only": True},
             "url": {"view_name": "posts:post-detail", "lookup_field": "id"},
@@ -39,6 +40,7 @@ class PostWithUrlSerializer(PostSerializer):
 
 
 class PostPhotoOnlySerializer(serializers.ModelSerializer):
+    photo = serializers.ImageField()
     post = serializers.HyperlinkedIdentityField(view_name="posts:post-detail", lookup_field="id")
 
     class Meta(PostSerializer.Meta):
