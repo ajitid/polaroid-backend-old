@@ -8,4 +8,5 @@ from .models import Post
 def delete_post_photo(sender, instance, **kwargs):
     instance.photo.delete(save=False)
     # FIXME deleting thumbnail
-    # instance.thumbnail.delete(save=False)
+    # https://github.com/matthewwithanm/django-imagekit/issues/229#issuecomment-385145019
+    # instance.thumbnail.delete(save=False) <- this won't work, atleast not now
