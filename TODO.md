@@ -1,5 +1,5 @@
-- add thumbnail field to django modela and serializers
-- add signals (imagekit has signals too)
+- post thumbnail deletion
+- user profile pic api endpoint and imagekit conversion
 
 
 - simplify things like
