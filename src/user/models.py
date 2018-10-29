@@ -2,6 +2,9 @@ import os.path as path
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _, gettext
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFit
+from PIL.Image import LANCZOS
 
 
 class User(AbstractUser):
@@ -33,7 +36,13 @@ def get_profile_photo_path(instance, filename):
 class Profile(models.Model):
     # user not pk=True because of weird Django AUTH_PROFILE_SOMETHING and SQLite issue
     user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
-    photo = models.ImageField(upload_to=get_profile_photo_path, default=DEFAULT_PROFILE_PICTURE_PATH)
+    photo = ProcessedImageField(
+        upload_to=get_profile_photo_path,
+        default=DEFAULT_PROFILE_PICTURE_PATH,
+        processors=[ResizeToFit(width=240)],
+        format="JPEG",
+        options={"quality": 75, "optimize": True, "upscale": True, "filter": LANCZOS},
+    )
     dob = models.DateField(_("date of birth"), blank=True, null=True)
     bio = models.CharField(max_length=180, blank=True)
     followers = models.ManyToManyField(User, related_name="followers", symmetrical=False, blank=True)

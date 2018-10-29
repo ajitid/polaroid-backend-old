@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _, gettext
 from imagekit.models import ProcessedImageField, ImageSpecField
-from imagekit.processors import ResizeToFit, ResizeToFill
+from imagekit.processors import ResizeToFit
 from PIL.Image import LANCZOS
 
 User = get_user_model()
@@ -25,7 +25,7 @@ class Post(models.Model):
         options={"quality": 75, "optimize": True, "upscale": True, "progressive": True, "filter": LANCZOS},
     )
     thumbnail = ImageSpecField(
-        source="photo", processors=[ResizeToFill(320, 320)], format="JPEG", options={"quality": 60}
+        source="photo", processors=[ResizeToFit(width=320)], format="JPEG", options={"quality": 60}
     )
     caption = models.CharField(max_length=180, blank=True)
     timestamp = models.DateTimeField(_("posted on"), auto_now_add=True)
